@@ -83,8 +83,8 @@ router.post("/login", async (req, res) => {
 
   const authUser = {
     id: foundUser._id,
-    name: foundUser.name,
     email: foundUser.email,
+    name: foundUser.firstName
   };
 
   const token = jwt.sign(authUser, process.env.SECRET_JWT_KEY, {
@@ -92,6 +92,19 @@ router.post("/login", async (req, res) => {
   });
 
   res.json({ user: authUser, token });
+});
+
+router.get("/:_id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user)
+      return res.status(404).json({
+        message: "User not found",
+      });
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 module.exports = router;
