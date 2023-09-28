@@ -1,5 +1,5 @@
 const app = require("./app");
-const connectDb = require("./config/db");
+const connectDb = require("./config/db.js");
 
 async function startServer() {
   try {
