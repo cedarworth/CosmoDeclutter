@@ -4,6 +4,7 @@ const morgan = require("morgan");
 
 require("dotenv").config()
 const authRouter = require("./routes/authRoutes");
+const productRoutes = require("./routes/productRoutes");
 const { user } = require("./middlewares/auth");
 
 
@@ -19,6 +20,7 @@ app.get("/api", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/product", productRoutes);
 
 app.get("/api/product", user, async (req, res) => {
   res.send("You got me. Haha!");

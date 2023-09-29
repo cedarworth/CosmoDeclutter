@@ -1,20 +1,12 @@
 const mongoose = require("mongoose");
-import { useLocation } from "react-router-dom";
-
-function ProductPage() {
-  const location = useLocation();
-  const data = location.state.data;
-
-  // Now you can use this data in your component
-}
 
 const productSchema = new mongoose.Schema({
-  id: String,
-  name: String,
-  price: String,
-  imgLink: String,
-  description: String,
-  location: String,
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  imgLink: Object,
+  description: { type: String, required: true },
+  location: { type: String, required: true },
 });
 
-modules.export = mongoose.model("Product", productSchema);
+const Product = mongoose.model("Product", productSchema);
+module.exports = Product;
