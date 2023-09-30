@@ -15,7 +15,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/api", (req, res) => {
+app.get("/api/auth", (req, res) => {
   res.send("Success. You're in");
 });
 

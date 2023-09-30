@@ -34,28 +34,30 @@ router.post(
       .withMessage("Description is a required field")
       .isLength({ min: 5 })
       .withMessage("Description must be at least 8 characters"),
-    body("Location")
+    body("location")
       .exists()
       .isLength({ min: 3 })
       .withMessage("Location confirmation is required"),
   ],
   upload.single("image"),
   async (req, res) => {
-    const errors = validationResult(req);
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(400).json(errors);
+    // }
+    console.log(req.file)
     const product = new Product({
       name: req.body.name,
       price: req.body.price,
-      imgLink: req.file.filename,
+      imgLink: req.file,
       description: req.body.description,
       location: req.body.location,
     });
 
-    // console.log(product);
+    console.log(product);
 
     try {
-        if (!errors.isEmpty()) {
-            return res.status(400).json(errors);
-          }
+
       const newProduct = await product.save();
       res.status(201).json(newProduct);
     } catch (error) {
