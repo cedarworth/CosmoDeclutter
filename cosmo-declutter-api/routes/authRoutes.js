@@ -94,7 +94,7 @@ router.post("/login", async (req, res) => {
   res.json({ user: authUser, token });
 });
 
-router.get("/:_id/", async (req, res) => {
+router.get("/home", async (req, res) => {
   try {
     const { _id } = req.params;
     console.log(_id);
