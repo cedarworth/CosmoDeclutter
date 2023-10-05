@@ -1,5 +1,5 @@
 import React from "react";
-import {Routes, Route } from "react-router-dom";
+import {Routes, Route, Navigate } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -15,6 +15,7 @@ const AppRoutes = () => {
   // console.log(isAuthenticated);
   return (
     <Routes>
+      <Route path={"/"} element={<Navigate to="/home" />} />
       <Route path={"/home"} element={<Homepage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />

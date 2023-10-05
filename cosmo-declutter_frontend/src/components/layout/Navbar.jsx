@@ -7,7 +7,7 @@ import { useUser } from "../../providers/UserProvider";
 
 const Navbar = () => {
   const { cart, setCart } = useCart(0);
-  const { user, setUser, setIsAuthenticated, isAuthenticated } = useUser();
+  const { user, setUser, isAuthenticated } = useUser();
 
   // console.log(user);
 
@@ -29,7 +29,7 @@ const Navbar = () => {
           <Link to="/cart">
             <i className="bi bi-cart2"></i>
             <div id="cartAmount" className="cartAmount">
-              {cart.length}
+              {cart.reduce((acc, item) => acc + item.quantity, 0)}
             </div>
           </Link>
         </div>
@@ -50,7 +50,7 @@ const Navbar = () => {
               <div className="nav-item">
                 <input type="radio" name="nav" id="e" />
                 <label htmlFor="e">
-                  <Link to={`/profile`} onClick={()=>{setUser({user}); setIsAuthenticated(true)}} className="nav-link">
+                  <Link to={`/profile`} className="nav-link">
                     Profile
                   </Link>
                 </label>
@@ -58,7 +58,7 @@ const Navbar = () => {
               <div className="nav-item">
                 <input type="radio" name="nav" id="f" />
                 <label htmlFor="f">
-                  <Link to="/login" className="nav-link" onClick={()=>{setUser({}); setIsAuthenticated(false)}}>
+                  <Link to="/login" className="nav-link" onClick={()=>{setUser(null); localStorage.removeItem("cosmo-token") }}>
                     Logout
                   </Link>
                 </label>

@@ -35,13 +35,7 @@ const Homepage = () => {
           return (
             <ProductCard
               key={product._id}
-              id={product._id}
-              name={product.name}
-              price={product.price}
-              description={product.description}
-              image={product.imgLink.filename}
-              location={product.location}
-              product={product}
+              product={transformProductObject(product)}
             />
           );
         })}
@@ -54,3 +48,14 @@ const Homepage = () => {
 };
 
 export default Homepage;
+
+function transformProductObject(product) {
+  return {
+    id: product._id,
+    name: product.name,
+    price: product.price,
+    description: product.description,
+    image: product.imgLink.filename,
+    location: product.location,
+  };
+}

@@ -10,7 +10,7 @@ const LoginPage = () => {
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [error, setError] = useState("");
-  const { setIsAuthenticated, user } = useUser();
+  const { setUser } = useUser();
   // const [data, setData] = useState([]);
 
   const handleSubmit = async (e) => {
@@ -25,13 +25,10 @@ const LoginPage = () => {
 
         const data = res.data;
         // console.log(data);
-        function storeData(key, data) {
-          localStorage.setItem(key, JSON.stringify(data));
-      }
       
-        // localStorage.setItem('poolKey', JSON.stringify(data));
+        localStorage.setItem('cosmo-token', data.token);
       
-        //  setUser(data); // Store only the data returned from the server
+        setUser(data.user); // Store only the data returned from the server
 
         // Display a success message from sweetalert2
         Swal.fire({
@@ -42,8 +39,8 @@ const LoginPage = () => {
         });
         
         // Navigate to the homepage
-        navigate(`/home`);
-        setIsAuthenticated(true);
+        navigate("/home");
+
       } catch (err) {
         setError(err.response.data.message);
 

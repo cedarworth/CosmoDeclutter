@@ -4,16 +4,19 @@ import axios from 'axios';
 const UserContext = createContext(null)
 
 const UserProvider = ({children}) => {
-  const path = window.location.pathname;
-  const id = path.split('/')[1];
 
-  const [user, setUser] = useState({});
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const isAuthenticated = user !== null;
 
   useEffect(() => {
+    const token = localStorage.getItem('cosmo-token')??'';
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/api/auth/${id}`);
+        const res = await axios.get(`http://localhost:4000/api/auth/user`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         const data = res.data;
         setUser(data);
       } catch (err) {
@@ -22,9 +25,9 @@ const UserProvider = ({children}) => {
     };
     fetchUser();
   }
-  , [id]);
+  , []);
     
-  return <UserContext.Provider value={{user, setUser, isAuthenticated, setIsAuthenticated}}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{user, setUser, isAuthenticated}}>{children}</UserContext.Provider>;
 }
 
 export const useUser = () => useContext(UserContext)

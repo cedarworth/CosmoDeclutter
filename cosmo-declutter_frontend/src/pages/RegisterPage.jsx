@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../components/layout/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 const RegisterPage = ({ setUser }) => {
   const [firstName, setFirstName] = useState("");
@@ -20,7 +20,7 @@ const RegisterPage = ({ setUser }) => {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:4000/api/auth/register", {
+      await axios.post("http://localhost:4000/api/auth/register", {
         firstName,
         lastName,
         email,
@@ -28,31 +28,25 @@ const RegisterPage = ({ setUser }) => {
         confirmPassword,
       });
 
-      const data = res.data;
-      console.log(data);
-
-      setUser(data); // Store only the data returned from the server
-
       // Display a success message
-        Swal.fire({
-          title: 'Success!',
-          text: 'Your regisration was successful.',
-          icon: 'success',
-          confirmButtonText: 'OK'
-        });
+      Swal.fire({
+        title: "Success!",
+        text: "Your regisration was successful.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
       navigate("/login");
-
     } catch (err) {
       console.log(err.response.data);
       setError(err.response.data.message);
 
       // Display an error message
-        Swal.fire({
-          title: 'Error!',
-          text: 'Make sure all the fields are correctly entered and your passwords fields matches.',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
+      Swal.fire({
+        title: "Error!",
+        text: "Make sure all the fields are correctly entered and your passwords fields matches.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -61,7 +55,13 @@ const RegisterPage = ({ setUser }) => {
       <Navbar />
       <div className="register">
         <h1>Welcome to</h1>
-        <img id="reg-img" src="../assets/logo_3.png" width="auto" height="auto" alt="" />
+        <img
+          id="reg-img"
+          src="../assets/logo_3.png"
+          width="auto"
+          height="auto"
+          alt=""
+        />
         <p>Please fill out this form with the required informations</p>
         {error && <p>{error}</p>} {/* Display error messages */}
         <form onSubmit={handleSubmit}>

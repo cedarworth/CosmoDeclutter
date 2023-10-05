@@ -6,7 +6,7 @@ import { useUser } from "../../providers/UserProvider";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, setUser, setIsAuthenticated, isAuthenticated } = useUser();
+  const { setUser, isAuthenticated } = useUser();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -21,12 +21,12 @@ const Sidebar = () => {
       )}
 
       <div className={`sidebar ${isOpen ? "open" : "close"}`}>
-        {user ? (
+        {isAuthenticated ? (
           <>
-          <Link to="/profile" onClick={()=>{setUser({user}); setIsAuthenticated(true)}}>
+          <Link to="/profile" >
               <p>Profile</p>
             </Link>
-          <Link to="/login" onClick={()=>{setUser({}); setIsAuthenticated(false)}}>
+          <Link to="/login" onClick={()=>{setUser(null); localStorage.removeItem("cosmo-token")}}>
             <p>Logout</p>
           </Link>
           </>

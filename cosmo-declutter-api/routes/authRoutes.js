@@ -2,6 +2,7 @@ const router = require("express").Router();
 const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
+const { user } = require("../middlewares/auth");
 
 router.post(
   "/register",
@@ -43,7 +44,7 @@ router.post(
 
       const foundUser = await User.findOne({ email: req.body.email });
       if (!!foundUser) {
-        return res.status(400).json({
+        return res.status(409).json({
           message: "Email already in use",
         });
       }
@@ -57,8 +58,16 @@ router.post(
       });
 
       await newUser.save();
+
+
+
+
+
+      
       console.log(newUser);
-      res.send("Yeah, you're in!");
+      res.status(201).json({
+        message: "Account created successfully"
+      });
     } catch (err) {
       console.log(err);
     }
@@ -70,13 +79,13 @@ router.post("/login", async (req, res) => {
 
   const foundUser = await User.findOne({ email });
   if (!foundUser) {
-    return res.status(400).json({
+    return res.status(404).json({
       message: "Invalid credentials",
     });
   }
   const passwordIsValid = await foundUser.isValidPassword(password);
   if (!passwordIsValid) {
-    return res.status(400).json({
+    return res.status(404).json({
       message: "Invalid credentials",
     });
   }
@@ -94,16 +103,9 @@ router.post("/login", async (req, res) => {
   res.json({ user: authUser, token });
 });
 
-router.get("/home", async (req, res) => {
+router.get("/user", user,  async (req, res) => {
   try {
-    const { _id } = req.params;
-    console.log(_id);
-    const user = await User.findById({ _id });
-    if (!user)
-      return res.status(404).json({
-        message: "User not found",
-      });
-    res.json(user);
+    res.json(req.user);
   } catch (err) {
     console.log(err);
   }

@@ -5,6 +5,7 @@ const morgan = require("morgan");
 require("dotenv").config()
 const authRouter = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
+const cartItemRoutes = require("./routes/cartItemRoutes");
 const { user } = require("./middlewares/auth");
 
 
@@ -21,9 +22,10 @@ app.get("/api/auth", (req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRoutes);
+app.use("/api/cart-item", user, cartItemRoutes);
 
-app.get("/api/product", user, async (req, res) => {
-  res.send("You got me. Haha!");
+app.use((err, req, res, next) => {
+  res.status(500).json({ message: err.message });
 });
 
 module.exports = app;

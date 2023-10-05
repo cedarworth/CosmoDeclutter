@@ -5,7 +5,6 @@ import "../styles.css";
 import Navbar from "../components/layout/Navbar";
 import { useUser } from "../providers/UserProvider";
 import { PiSealWarningFill } from "react-icons/pi";
-// import LoginPage from "./LoginPage";
 
 function ProfilePage() {
   // const [navigate] = useNavigate();
@@ -29,27 +28,25 @@ function ProfilePage() {
   function retrieveData(key) {
     const data = localStorage.getItem(key);
     return data ? JSON.parse(data) : null;
-}
+  }
 
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
 
-    useEffect(() => {
-        const storedData = retrieveData('myKey');
-        if (storedData) {
-            setData(storedData);
-        }
-    }, []);
+  // useEffect(() => {
+  //     const storedData = retrieveData('myKey');
+  //     if (storedData) {
+  //         setData(storedData);
+  //     }
+  // }, []);
 
-  // console.log(user);
+  console.log(user);
 
   // const [items, setItems] = useState([]);
 
+  // let basket = JSON.parse(localStorage.getItem('data'));
+  // let storedUser = basket.map((x) => { return basket[2].user});
+  // console.log(storedUser);
 
-    // let basket = JSON.parse(localStorage.getItem('data'));
-    // let storedUser = basket.map((x) => { return basket[2].user});
-    // console.log(storedUser);
-
-  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserItem((prevState) => ({
@@ -58,7 +55,7 @@ function ProfilePage() {
     }));
   };
 
-  const handleValiation = () => {
+  const handleValidation = () => {
     let imageError = "";
     let nameError = "";
     let descriptionError = "";
@@ -136,10 +133,9 @@ function ProfilePage() {
     }
   };
 
-
   const onSubmit = (e) => {
     e.preventDefault();
-    const valid = handleValiation();
+    const valid = handleValidation();
     if (!valid) {
       return;
     }
@@ -171,87 +167,87 @@ function ProfilePage() {
       {/* {Object.keys(user) < 1 ? (
         "Loading..." 
       ) : ( */}
-        <>
-          <div className="user-profile">
-            <h2>{`${user.storedData}'s Declutter Corner`}</h2>
-            <h3>You can upload an Item for sale here:</h3>
-            <form onSubmit={onSubmit} encType="multipart/form-data">
-              <label>
-                Image:
-                <input type="file" onChange={handleImageUpload} name="image" />
-                {/* {userItem.image && <img src={userItem.image} alt="Preview" />} */}
-              </label>
-              {errorObj.imageError && (
-                <span className="error">
-                  <PiSealWarningFill />
-                  {errorObj.imageError}
-                </span>
-              )}
-              {/* Other form fields */}
-              <label>
-                Name:
-                <input
-                  type="text"
-                  name="name"
-                  value={userItem.name}
-                  onChange={handleChange}
-                />
-              </label>
-              {errorObj.nameError && (
-                <span className="error">
-                  <PiSealWarningFill />
-                  {errorObj.nameError}
-                </span>
-              )}
-              <label>
-                Description:
-                <textarea
-                  name="description"
-                  value={userItem.description}
-                  onChange={handleChange}
-                />
-              </label>
-              {errorObj.descriptionError && (
-                <span className="error">
-                  <PiSealWarningFill />
-                  {errorObj.descriptionError}
-                </span>
-              )}
-              <label>
-                Price:
-                <input
-                  type="number"
-                  name="price"
-                  value={userItem.price}
-                  onChange={handleChange}
-                />
-              </label>
-              {errorObj.priceError && (
-                <span className="error">
-                  <PiSealWarningFill />
-                  {errorObj.priceError}
-                </span>
-              )}
-              <label>
-                Location:
-                <input
-                  type="text"
-                  name="location"
-                  value={userItem.location}
-                  onChange={handleChange}
-                />
-              </label>
-              {errorObj.locationError && (
-                <span className="error">
-                  <PiSealWarningFill />
-                  {errorObj.locationError}
-                </span>
-              )}
-              <button type="submit">Submit</button>
-            </form>
-          </div>
-          {/* <button type="submit">Submit</button> */}
-        </>
+      <>
+        <div className="user-profile">
+          <h2>{`${user?.name}'s Declutter Corner`}</h2>
+          <h3>You can upload an Item for sale here:</h3>
+          <form onSubmit={onSubmit} encType="multipart/form-data">
+            <label>
+              Image:
+              <input type="file" onChange={handleImageUpload} name="image" />
+              {/* {userItem.image && <img src={userItem.image} alt="Preview" />} */}
+            </label>
+            {errorObj.imageError && (
+              <span className="error">
+                <PiSealWarningFill />
+                {errorObj.imageError}
+              </span>
+            )}
+            {/* Other form fields */}
+            <label>
+              Name:
+              <input
+                type="text"
+                name="name"
+                value={userItem.name}
+                onChange={handleChange}
+              />
+            </label>
+            {errorObj.nameError && (
+              <span className="error">
+                <PiSealWarningFill />
+                {errorObj.nameError}
+              </span>
+            )}
+            <label>
+              Description:
+              <textarea
+                name="description"
+                value={userItem.description}
+                onChange={handleChange}
+              />
+            </label>
+            {errorObj.descriptionError && (
+              <span className="error">
+                <PiSealWarningFill />
+                {errorObj.descriptionError}
+              </span>
+            )}
+            <label>
+              Price:
+              <input
+                type="number"
+                name="price"
+                value={userItem.price}
+                onChange={handleChange}
+              />
+            </label>
+            {errorObj.priceError && (
+              <span className="error">
+                <PiSealWarningFill />
+                {errorObj.priceError}
+              </span>
+            )}
+            <label>
+              Location:
+              <input
+                type="text"
+                name="location"
+                value={userItem.location}
+                onChange={handleChange}
+              />
+            </label>
+            {errorObj.locationError && (
+              <span className="error">
+                <PiSealWarningFill />
+                {errorObj.locationError}
+              </span>
+            )}
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+        {/* <button type="submit">Submit</button> */}
+      </>
       {/* ) */}
     </>
   );
