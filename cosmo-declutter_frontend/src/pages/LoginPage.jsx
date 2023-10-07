@@ -66,7 +66,7 @@ const LoginPage = () => {
   return (
     <div>
       <Navbar loginPage={true} />
-      <img id="log-img1" src="../assets/img-0.png" width="" height=""/>
+      {/* <img id="log-img1" src="../assets/img-0.png" width="" height=""/> */}
       {/* <!--Login form--> */}
       <div className="login">
         <h1>Welcome Back to</h1>
