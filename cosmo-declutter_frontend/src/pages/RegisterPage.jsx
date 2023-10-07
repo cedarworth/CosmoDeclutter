@@ -20,7 +20,7 @@ const RegisterPage = ({ setUser }) => {
       return;
     }
     try {
-      await axios.post("http://localhost:4000/api/auth/register", {
+      await axios.post("https://cosmodeclutter-api.onrender.com/api/auth/register", {
         firstName,
         lastName,
         email,

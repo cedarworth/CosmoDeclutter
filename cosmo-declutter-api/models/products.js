@@ -6,6 +6,8 @@ const productSchema = new mongoose.Schema({
   imgLink: Object,
   description: { type: String, required: true },
   location: { type: String, required: true },
+}, {
+  versionKey: false,
 });
 
 const Product = mongoose.model("Product", productSchema);

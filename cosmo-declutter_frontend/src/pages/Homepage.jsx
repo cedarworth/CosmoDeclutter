@@ -15,7 +15,7 @@ const Homepage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/product")
+      .get("https://cosmodeclutter-api.onrender.com/api/products")
       .then((response) => {
         setProducts(response.data);
       })
@@ -55,7 +55,7 @@ function transformProductObject(product) {
     name: product.name,
     price: product.price,
     description: product.description,
-    image: product.imgLink.filename,
+    image: product.imgLink,
     location: product.location,
   };
 }

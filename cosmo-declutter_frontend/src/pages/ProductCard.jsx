@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles.css";
 import { useCart } from "../providers/CartProvider";
 
 function ProductCard({ product }) {
-  const { addToCart, removeFromCart } = useCart();
-
+  const { addToCart, removeFromCart, cart } = useCart();
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const foundProduct = cart.find(i => i.item.id === product.id)
+    if (!!foundProduct) {
+      setCount(foundProduct.quantity)
+    }
+  }, [cart])
 
   return (
     <div className="card">
-      <img src={`/assets/${product.image}`} alt="Product" />
+      <img src={product.image} alt="Product" />
       {/* {image && <img src={image} alt="Preview" />} */}
       <div className="info">
         <h2>{product.name}</h2>

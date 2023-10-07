@@ -18,7 +18,7 @@ const LoginPage = () => {
       try {
         e.preventDefault();
 
-        const res = await axios.post("http://localhost:4000/api/auth/login", {
+        const res = await axios.post("https://cosmodeclutter-api.onrender.com/api/auth/login", {
           email: emailInput,
           password: passwordInput,
         });

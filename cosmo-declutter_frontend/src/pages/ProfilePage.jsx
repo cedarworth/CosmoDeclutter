@@ -5,6 +5,17 @@ import "../styles.css";
 import Navbar from "../components/layout/Navbar";
 import { useUser } from "../providers/UserProvider";
 import { PiSealWarningFill } from "react-icons/pi";
+import {
+  Dialog,
+  DialogTrigger,
+  Heading,
+  Divider,
+  Content,
+  ButtonGroup,
+  Button,
+  ActionButton,
+} from "@adobe/react-spectrum";
+import Swal from "sweetalert2";
 
 function ProfilePage() {
   // const [navigate] = useNavigate();
@@ -30,15 +41,6 @@ function ProfilePage() {
     return data ? JSON.parse(data) : null;
   }
 
-  // const [data, setData] = useState(null);
-
-  // useEffect(() => {
-  //     const storedData = retrieveData('myKey');
-  //     if (storedData) {
-  //         setData(storedData);
-  //     }
-  // }, []);
-
   console.log(user);
 
   // const [items, setItems] = useState([]);
@@ -56,57 +58,45 @@ function ProfilePage() {
   };
 
   const handleValidation = () => {
-    let imageError = "";
-    let nameError = "";
-    let descriptionError = "";
-    let priceError = "";
-    let locationError = "";
+    let errors = {};
 
     if (!userItem.name) {
-      nameError = "Please enter a name";
+      errors.name = "Please enter a name";
     } else if (userItem.name.length < 3) {
-      nameError = "Name must be at least 3 characters long";
+      errors.name = "Name must be at least 3 characters long";
     }
     if (!userItem.description) {
-      descriptionError = "Please enter a description";
+      errors.description = "Please enter a description";
     } else if (userItem.description.length < 5) {
-      descriptionError = "Description must be at least 5 characters long";
+      errors.description = "Description must be at least 5 characters long";
     }
     if (!userItem.price) {
-      priceError = "Please enter a price";
+      errors.price = "Please enter a price";
     } else if (userItem.price < 0) {
-      priceError = "Price must be a positive number";
+      errors.price = "Price must be a positive number";
     }
     if (!userItem.location) {
-      locationError = "Please enter a location";
+      errors.location = "Please enter a location";
     } else if (userItem.location.length < 3) {
-      locationError = "Location must be at least 3 characters long";
+      errors.location = "Location must be at least 3 characters long";
     }
-    if (
-      imageError ||
-      nameError ||
-      descriptionError ||
-      priceError ||
-      locationError
-    ) {
+    if (Object.keys(errors).length > 0) {
       setErrorObj((prevState) => ({
         ...prevState,
-        imageError,
-        nameError,
-        descriptionError,
-        priceError,
-        locationError,
+        nameError: errors.name,
+        descriptionError: errors.description,
+        priceError: errors.price,
+        locationError: errors.location,
       }));
       return false;
-    }
-    setErrorObj((prevState) => ({
-      ...prevState,
-      imageError,
-      nameError,
-      descriptionError,
-      priceError,
-      locationError,
-    }));
+    } else
+      setErrorObj((prevState) => ({
+        ...prevState,
+        nameError: "",
+        descriptionError: "",
+        priceError: "",
+        locationError: "",
+      }));
     return true;
   };
 
@@ -133,13 +123,10 @@ function ProfilePage() {
     }
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = (close) => {
     const valid = handleValidation();
-    if (!valid) {
-      return;
-    }
-
+    if (!valid) return;
+    
     const formData = new FormData();
     formData.append("image", selectedFile);
     formData.append("name", userItem.name);
@@ -147,108 +134,168 @@ function ProfilePage() {
     formData.append("price", userItem.price);
     formData.append("location", userItem.location);
 
+    console.log(Object.fromEntries(formData.entries()));
+    const token = localStorage.getItem("cosmo-token");
     axios
-      .post("http://localhost:4000/api/product/addProduct", formData, {
+      .post("https://cosmodeclutter-api.onrender.com/api/products", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
         console.log(response);
+
+        // Display a success message
+        Swal.fire({
+          title: "Success!",
+          text: "Your item has been uploaded successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        close();
       })
       .catch((error) => {
         console.error(error);
+        // Display an error message
+        Swal.fire({
+          title: "Error!",
+          text: "Your item was not uploaded. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       });
   };
 
   return (
     <>
       <Navbar />
-      {/* {Object.keys(user) < 1 ? (
+      {user === null ? (
         "Loading..." 
-      ) : ( */}
+      ) : (
       <>
         <div className="user-profile">
           <h2>{`${user?.name}'s Declutter Corner`}</h2>
-          <h3>You can upload an Item for sale here:</h3>
-          <form onSubmit={onSubmit} encType="multipart/form-data">
-            <label>
-              Image:
-              <input type="file" onChange={handleImageUpload} name="image" />
-              {/* {userItem.image && <img src={userItem.image} alt="Preview" />} */}
-            </label>
-            {errorObj.imageError && (
-              <span className="error">
-                <PiSealWarningFill />
-                {errorObj.imageError}
-              </span>
-            )}
-            {/* Other form fields */}
-            <label>
-              Name:
-              <input
-                type="text"
-                name="name"
-                value={userItem.name}
-                onChange={handleChange}
-              />
-            </label>
-            {errorObj.nameError && (
-              <span className="error">
-                <PiSealWarningFill />
-                {errorObj.nameError}
-              </span>
-            )}
-            <label>
-              Description:
-              <textarea
-                name="description"
-                value={userItem.description}
-                onChange={handleChange}
-              />
-            </label>
-            {errorObj.descriptionError && (
-              <span className="error">
-                <PiSealWarningFill />
-                {errorObj.descriptionError}
-              </span>
-            )}
-            <label>
-              Price:
-              <input
-                type="number"
-                name="price"
-                value={userItem.price}
-                onChange={handleChange}
-              />
-            </label>
-            {errorObj.priceError && (
-              <span className="error">
-                <PiSealWarningFill />
-                {errorObj.priceError}
-              </span>
-            )}
-            <label>
-              Location:
-              <input
-                type="text"
-                name="location"
-                value={userItem.location}
-                onChange={handleChange}
-              />
-            </label>
-            {errorObj.locationError && (
-              <span className="error">
-                <PiSealWarningFill />
-                {errorObj.locationError}
-              </span>
-            )}
-            <button type="submit">Submit</button>
-          </form>
+          <div className="image-box">
+            <img
+              src={user?.image}
+              alt="user"
+              width="200px"
+              height="200px"
+              className="profile-img"
+            />
+          </div>
+          {/* <h3>You can upload an Item for sale here:</h3> */}
         </div>
-        {/* <button type="submit">Submit</button> */}
+        <DialogTrigger>
+          <Button variant="primary" style="fill" UNSAFE_className="" >Upload Product</Button>
+          {(close) => (
+            <Dialog>
+              <Heading>Upload Product</Heading>
+              <Divider />
+              <Content>
+                <div className="product-upload-ctn">
+                  <form onSubmit={onSubmit} encType="multipart/form-data">
+                    <label>
+                      Image:
+                      <input
+                        type="file"
+                        onChange={handleImageUpload}
+                        name="image"
+                      />
+                      {/* {userItem.image && <img src={userItem.image} alt="Preview" />} */}
+                    </label>
+                    {errorObj.imageError && (
+                      <span className="error">
+                        <PiSealWarningFill />
+                        {errorObj.imageError}
+                      </span>
+                    )}
+                    {/* Other form fields */}
+                    <label>
+                      Name:
+                      <input
+                        type="text"
+                        name="name"
+                        value={userItem.name}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    {errorObj.nameError && (
+                      <span className="error">
+                        <PiSealWarningFill />
+                        {errorObj.nameError}
+                      </span>
+                    )}
+                    <label>
+                      Description:
+                      <textarea
+                        name="description"
+                        value={userItem.description}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    {errorObj.descriptionError && (
+                      <span className="error">
+                        <PiSealWarningFill />
+                        {errorObj.descriptionError}
+                      </span>
+                    )}
+                    <label>
+                      Price:
+                      <input
+                        type="number"
+                        name="price"
+                        value={userItem.price}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    {errorObj.priceError && (
+                      <span className="error">
+                        <PiSealWarningFill />
+                        {errorObj.priceError}
+                      </span>
+                    )}
+                    <label>
+                      Location:
+                      <input
+                        type="text"
+                        name="location"
+                        value={userItem.location}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    {errorObj.locationError && (
+                      <span className="error">
+                        <PiSealWarningFill />
+                        {errorObj.locationError}
+                      </span>
+                    )}
+                    {/* <button className="reg-btn" type="submit">
+                      Submit
+                    </button> */}
+                  </form>
+                </div>
+              </Content>
+              <ButtonGroup>
+                <Button variant="secondary" onPress={close}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="accent"
+                  onPress={() => {
+                    onSubmit(close);
+                  }}
+                  autoFocus
+                >
+                  Confirm
+                </Button>
+              </ButtonGroup>
+            </Dialog>
+          )}
+        </DialogTrigger>
       </>
-      {/* ) */}
+      )}
     </>
   );
 }
